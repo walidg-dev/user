@@ -3,6 +3,8 @@ spring:
     url: r2dbc:postgresql://${DB_HOST}:5432/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    properties:
+      sslMode: REQUIRE
   flyway:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
     user: ${DB_USER}
