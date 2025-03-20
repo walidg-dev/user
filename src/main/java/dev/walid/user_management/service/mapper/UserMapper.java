@@ -10,17 +10,19 @@ import java.time.LocalDateTime;
 public class UserMapper {
 
     public UserDto toDto(UserEntity user){
-        return new UserDto(user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail());
+        return UserDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .build();
     }
 
     public UserEntity toUser(UserDto dto){
         return UserEntity.builder()
-                .firstName(dto.firstName())
-                .lastName(dto.lastName())
-                .email(dto.email())
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .email(dto.getEmail())
                 .createdAt(LocalDateTime.now())
                 .build();
     }

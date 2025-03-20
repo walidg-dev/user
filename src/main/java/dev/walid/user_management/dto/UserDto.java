@@ -1,8 +1,13 @@
 package dev.walid.user_management.dto;
 
-public record UserDto(
-        Integer id,
-        String firstName,
-        String lastName,
-        String email) {
+import lombok.Builder;
+import lombok.Data;
+
+@Builder
+@Data
+public class UserDto {
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String email;
 }
