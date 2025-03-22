@@ -32,26 +32,28 @@ class UserControllerTest {
     @MockitoBean
     private UserService service;
 
-    public static String asJsonString(final Object obj) {
+    private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+    private static UserDto buildDto() {
 
-    @Test
-    void getUserShouldReturnUserFromService() throws Exception {
-
-        UserDto dto = UserDto.builder()
+        return UserDto.builder()
                 .id(1)
                 .firstName("John")
                 .lastName("Doe")
                 .email("John@email.com")
                 .build();
 
-        when(service.getById(any()) ).thenReturn(Mono.just(dto));
-        MvcResult result = this.mockMvc.perform(get("/users/1"))
+    }
+    @Test
+    void getUserShouldReturnUserFromService() throws Exception {
+
+        when(service.getById(any()) ).thenReturn(Mono.just(buildDto()));
+        MvcResult result = this.mockMvc.perform(get("/api/v1/users/1"))
                 .andExpect(request().asyncStarted())
                 .andReturn();
         mockMvc.perform(asyncDispatch(result))
@@ -69,17 +71,10 @@ class UserControllerTest {
     @Test
     void getUsersShouldReturnUsersFromService() throws Exception {
 
-        UserDto dto = UserDto.builder()
-                .id(1)
-                .firstName("John")
-                .lastName("Doe")
-                .email("John@email.com")
-                .build();
-
-        var dtoList = IntStream.range(0, 6).mapToObj(i -> dto).toList();
+        var dtoList = IntStream.range(0, 6).mapToObj(i -> buildDto()).toList();
 
         when(service.getAll() ).thenReturn(Flux.fromIterable(dtoList));
-        MvcResult result = this.mockMvc.perform(get("/users/all"))
+        MvcResult result = this.mockMvc.perform(get("/api/v1/users/all"))
                 .andExpect(request().asyncStarted())
                 .andReturn();
         mockMvc.perform(asyncDispatch(result))
@@ -94,17 +89,11 @@ class UserControllerTest {
     @Test
     void createUserShouldReturnUserFromService() throws Exception {
 
-        UserDto dto = UserDto.builder()
-                .id(1)
-                .firstName("John")
-                .lastName("Doe")
-                .email("John@email.com")
-                .build();
-
-        when(service.create(any()) ).thenReturn(Mono.just(dto));
-        MvcResult result = this.mockMvc.perform(post("/users")
+        UserDto userDto = buildDto();
+        when(service.create(any()) ).thenReturn(Mono.just(userDto));
+        MvcResult result = this.mockMvc.perform(post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(dto)))
+                        .content(asJsonString(userDto)))
                 .andExpect(request().asyncStarted())
                 .andReturn();
         mockMvc.perform(asyncDispatch(result))
@@ -122,17 +111,12 @@ class UserControllerTest {
     @Test
     void updateUserShouldReturnUserFromService() throws Exception {
 
-        UserDto dto = UserDto.builder()
-                .id(1)
-                .firstName("John")
-                .lastName("Doe")
-                .email("John@email.com")
-                .build();
+        UserDto userDto = buildDto();
 
-        when(service.update(any(), any()) ).thenReturn(Mono.just(dto));
-        MvcResult result = this.mockMvc.perform(put("/users/1")
+        when(service.update(any(), any()) ).thenReturn(Mono.just(userDto));
+        MvcResult result = this.mockMvc.perform(put("/api/v1/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(dto)))
+                        .content(asJsonString(userDto)))
                 .andExpect(request().asyncStarted())
                 .andReturn();
         mockMvc.perform(asyncDispatch(result))
@@ -151,7 +135,7 @@ class UserControllerTest {
     void deleteUserShouldReturnVoid() throws Exception {
 
         when(service.delete(any()) ).thenReturn(Mono.empty());
-        MvcResult result = this.mockMvc.perform(delete("/users/1"))
+        MvcResult result = this.mockMvc.perform(delete("/api/v1/users/1"))
                 .andExpect(request().asyncStarted())
                 .andReturn();
         mockMvc.perform(asyncDispatch(result))
