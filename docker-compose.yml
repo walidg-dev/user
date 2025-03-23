@@ -23,7 +23,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ~/data
+      device: /home/ubuntu/data
 networks:
   my_network:
     driver: bridge
