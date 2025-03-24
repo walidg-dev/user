@@ -1,6 +1,6 @@
 # User Microservice README
 This microservice provides a simple implementation of CRUD (Create, Read, Update, Delete) operations for managing user data.
-The service is designed to interact with a PostgreSQL database and exposes RESTful endpoints for client applications.
+The service is designed to interact with a PostgreSQL database and exposes reactive RESTful endpoints for client applications.
 
 **Table of Contents**
 - Prerequisites
